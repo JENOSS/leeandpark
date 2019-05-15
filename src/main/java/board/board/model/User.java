@@ -1,4 +1,4 @@
-package com.park.webservice.model;
+package board.board.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
