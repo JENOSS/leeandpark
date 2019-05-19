@@ -4,7 +4,9 @@ import board.board.repository.UserRepository;
 import board.board.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,7 +25,7 @@ public class MyController {
         mav.addObject("msg","this is sample content");
         return mav;
     }
-
+/*
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login (ModelAndView mav){
         mav.setViewName("login");
@@ -44,6 +46,12 @@ public class MyController {
         repository.saveAndFlush(user);
         return new ModelAndView("redirect:/");
     }
+*/
+    @RequestMapping(value="/index", method=RequestMethod.GET)
+    public ModelAndView mainproject(ModelAndView mav) {
+         mav = new ModelAndView("index");
+
+        return mav;}
 
 
 }

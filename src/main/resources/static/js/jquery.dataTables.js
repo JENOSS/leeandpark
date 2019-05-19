@@ -7809,7 +7809,7 @@
 						return $.inArray( el, displayFiltered ) === -1 ? el : null;
 					} );
 		}
-		else if ( order == 'static.index' || order == 'original' ) {
+		else if ( order == 'templates.index' || order == 'original' ) {
 			for ( i=0, ien=settings.aoData.length ; i<ien ; i++ ) {
 				if ( search == 'none' ) {
 					a.push( i );
