@@ -20,10 +20,9 @@ public class MyController {
     UserRepository repository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView welcome (ModelAndView mav){
-        mav.setViewName("welcome");
-        mav.addObject("msg","this is sample content");
-        return mav;
+    public String welcome (){
+
+        return "welcome";
     }
 /*
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -48,10 +47,8 @@ public class MyController {
     }
 */
     @RequestMapping(value="/index", method=RequestMethod.GET)
-    public ModelAndView mainproject(ModelAndView mav) {
-         mav = new ModelAndView("index");
+    public String mainproject() {
 
-        return mav;}
-
+        return "index";}
 
 }
