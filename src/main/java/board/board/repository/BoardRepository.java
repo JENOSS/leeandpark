@@ -10,9 +10,10 @@ import org.springframework.data.repository.query.Param;
 
 import board.board.model.Board;
 import board.board.model.BoardFile;
+import org.springframework.stereotype.Repository;
 
 
-
+@Repository
 public interface BoardRepository extends CrudRepository<Board, Integer> {
     List<Board> findAllByOrderByBoardidxDesc();
 
