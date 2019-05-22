@@ -37,6 +37,17 @@ public class ProjectServiceImpl implements   ProjectService{
 
     public  void saveProject(Project project) {
 
+        ProjectMember pm = new ProjectMember();
+        int projectidx;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        project.setCreatorid(username);
+        projectRepository.save(project);
+        projectidx = projectRepository.findMaxProjectidx();
+        pm.setId(username);
+        pm.setProjectidx(projectidx);
+        projectMemberRepository.save(pm);
+
     }
 
 

@@ -9,6 +9,6 @@ public class NoticeController {
     @RequestMapping(value = "/notice", method = RequestMethod.GET)
     public String welcome (){
 
-        return "project";
+        return "notice";
     }
 }

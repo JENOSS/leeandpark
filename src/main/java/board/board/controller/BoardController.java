@@ -42,8 +42,8 @@ public class BoardController {
     }
 
     @RequestMapping(value="jpa/board/write", method=RequestMethod.POST)
-    public String writeBoard(Board board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
-        boardService.saveBoard(board, multipartHttpServletRequest);
+        public String writeBoard(Board board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
+            boardService.saveBoard(board, multipartHttpServletRequest);
         return "redirect:/jpa/board";
     }
 

@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Integer> {
 
+    Project save(Project project);
+
     @Query("SELECT p FROM Project p where p.projectidx = :projectidx")
     Project findByProjectidx(@Param("projectidx") int projectidx);
+
+    @Query("SELECT max(p.projectidx) FROM Project p" )
+    int findMaxProjectidx();
 }

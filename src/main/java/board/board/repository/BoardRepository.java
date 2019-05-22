@@ -15,8 +15,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends CrudRepository<Board, Integer> {
-    List<Board> findAllByOrderByBoardidxDesc();
 
+
+    List<Board> findAllByOrderByBoardidxDesc();
     @Query("SELECT file FROM BoardFile file WHERE idx= :idx AND boardidx = :boardidx")
     BoardFile findBoardFile(@Param("idx") int idx, @Param("boardidx") int boardidx);
 /*
