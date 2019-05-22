@@ -24,6 +24,15 @@ public class MyController {
     @RequestMapping(value="/index", method=RequestMethod.GET)
     public String mainproject() {
 
-        return "index";}
+        return "index";
+    }
+
+    @RequestMapping(value="/sprint", method=RequestMethod.GET)
+    public String sprint() {
+
+        return "sprint";
+    }
+
+
 
 }
