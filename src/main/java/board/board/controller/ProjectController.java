@@ -5,13 +5,11 @@ import board.board.model.ProjectMember;
 import board.board.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class ProjectController {
@@ -21,17 +19,18 @@ public class ProjectController {
 
     @RequestMapping(value="/project", method= RequestMethod.GET)
     public ModelAndView openProjectList(/*ModelMap model*/) throws Exception{
-        ModelAndView mv = new ModelAndView("project");
+        ModelAndView mv = new ModelAndView("projectHome");
 
-        List<ProjectMember> list = projectService.selectProjectList();
-        mv.addObject("list", list);
+        List<ProjectMember> list = projectService.selectProjectMemberList();
+        List<Project> plist = projectService.selectProjectList(list);
+        mv.addObject("list", plist);
 
 
         return mv;
     }
-
+    /*
     @RequestMapping(value="/project/write", method= RequestMethod.GET)
-    public String openProjectWrite(/*ModelMap model*/) throws Exception{
+    public String openProjectWrite() throws Exception{
 
         return "projectWrite";
     }
@@ -49,7 +48,6 @@ public class ProjectController {
         Board board = boardService.selectBoardDetail(boardidx);
         mv.addObject("board", board);
     */
-        return mv;
-    }
+
 
 }
