@@ -11,4 +11,5 @@ public interface ProjectService {
     List<ProjectMember> selectProjectMemberList() throws  Exception;
     List<Project> selectProjectList(List<ProjectMember> list) throws  Exception;
     void saveProject(Project project) throws Exception;
+    int pageCheck(int projectidx) throws Exception;
 }

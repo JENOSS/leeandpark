@@ -16,4 +16,5 @@ public interface ProjectRepository extends CrudRepository<Project, Integer> {
 
     @Query("SELECT max(p.projectidx) FROM Project p" )
     int findMaxProjectidx();
+
 }

@@ -50,5 +50,14 @@ public class ProjectServiceImpl implements   ProjectService{
 
     }
 
+    public int pageCheck(int projectidx) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        String pusername = projectMemberRepository.findidByProjectidx(projectidx);
+        if(username.equals(pusername)){return 1;}
+
+        return 0;
+    }
+
 
 }

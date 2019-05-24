@@ -4,6 +4,8 @@ import board.board.model.User;
 import board.board.repository.RoleRepository;
 import board.board.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +30,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public String selectUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return username;
     }
 }

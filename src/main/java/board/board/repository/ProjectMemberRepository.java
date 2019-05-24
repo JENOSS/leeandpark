@@ -13,12 +13,10 @@ package board.board.repository;
 
 @Repository
 public interface ProjectMemberRepository extends CrudRepository<ProjectMember, Integer> {
-
-
+        @Query("SELECT pm.id FROM ProjectMember pm where pm.projectidx = :projectidx")
+        String findidByProjectidx(@Param("projectidx") int projectidx);
 
         @Query("SELECT pm FROM ProjectMember pm where pm.id = :id")
         List<ProjectMember> findById(@Param("id") String id);
-
-
 
 }
