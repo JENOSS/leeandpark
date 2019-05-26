@@ -33,9 +33,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String selectUsername() {
+    public User selectUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return username;
+        User user = new User();
+        user.setName(username);
+        return user;
     }
 }

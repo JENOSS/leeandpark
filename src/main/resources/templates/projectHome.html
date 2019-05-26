@@ -100,7 +100,7 @@
             <div class="col grid-margin">
                 <div class="content">
                     <div class="text-white">
-                        <span><h1>반갑습니다, <p th:text="${name}" ></p> 님</h1></span>
+                        <span><h1>반갑습니다, <td th:text="${user.name}"></td>님</h1></span>
                         <p><h5>프로젝트를 관리하세요.</h5></p>
                         <br>
                     </div>
@@ -137,7 +137,7 @@
                                     <!--                            </thead>-->
                                     <tbody>
                                     <tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
-                                        <td th:text="${list.projectidx}"></td>
+
                                         <td class="title"><a href="/project/" th:attrappend="href=${list.projectidx}" th:text="${list.title}"></a></td>
                                         <td>
                                             <button class="btn btn-rounded btn-outline-info" type="button"

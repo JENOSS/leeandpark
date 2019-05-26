@@ -7,5 +7,5 @@ public interface UserService {
 
     User findByUsername(String username);
 
-    String selectUsername();
+    User selectUsername();
 }

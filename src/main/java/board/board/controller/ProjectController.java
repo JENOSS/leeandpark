@@ -2,6 +2,7 @@ package board.board.controller;
 
 import board.board.model.Project;
 import board.board.model.ProjectMember;
+import board.board.model.User;
 import board.board.service.ProjectService;
 import board.board.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,9 @@ public class ProjectController {
         List<ProjectMember> list = projectService.selectProjectMemberList();
         List<Project> plist = projectService.selectProjectList(list);
 
-        String name = userService.selectUsername();
+        User user = userService.selectUsername();
         mv.addObject("list", plist);
-        mv.addObject(name);
+        mv.addObject(user);
         return mv;
     }
 
