@@ -50,11 +50,12 @@ public class ProjectController {
     }
 
     @RequestMapping(value="project/{projectidx}", method=RequestMethod.GET)
-    public ModelAndView openBoardDetail(@PathVariable int projectidx) throws Exception{
+    public ModelAndView openProjectDetail(@PathVariable int projectidx) throws Exception{
         int check =0;
         check = projectService.pageCheck(projectidx);
         if(check == 1) {
             ModelAndView mv = new ModelAndView("index");
+            mv.addObject(projectidx);
             //여기서 projectidx로 게시판 가져오기?
             return mv;
         }

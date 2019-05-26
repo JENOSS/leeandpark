@@ -26,47 +26,50 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
-    @RequestMapping(value="/jpa/board", method=RequestMethod.GET)
-    public ModelAndView openBoardList(/*ModelMap model*/) throws Exception{
+    @RequestMapping(value="/project/{projectidx}/board", method=RequestMethod.GET)
+    public ModelAndView openBoardList(@PathVariable("projectidx") int projectidx) throws Exception{
         ModelAndView mv = new ModelAndView("boardList");
 
-        List<Board> list = boardService.selectBoardList();
+        List<Board> list = boardService.selectBoardList(projectidx);
         mv.addObject("list", list);
 
         return mv;
     }
 
-    @RequestMapping(value="/jpa/board/write", method=RequestMethod.GET)
-    public String openBoardWrite() throws Exception{
-        return "boardWrite";
+    @RequestMapping(value="/project/{projectidx}/board/write", method=RequestMethod.GET)
+    public ModelAndView openBoardWrite(@PathVariable("projectidx") int projectidx) throws Exception{
+        ModelAndView mv = new ModelAndView("boardWrite");
+        mv.addObject(projectidx);
+        return mv;
     }
 
-    @RequestMapping(value="jpa/board/write", method=RequestMethod.POST)
-        public String writeBoard(Board board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
+    @RequestMapping(value="/project/{projectidx}/board/write", method=RequestMethod.POST)
+        public String writeBoard(@PathVariable("projectidx") int projectidx, Board board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
             boardService.saveBoard(board, multipartHttpServletRequest);
-        return "redirect:/jpa/board";
+
+        return "redirect:/project/{projectidx}/board";
     }
 
-    @RequestMapping(value="jpa/board/{boardidx}", method=RequestMethod.GET)
-    public ModelAndView openBoardDetail(@PathVariable("boardidx") int boardidx, ModelMap model) throws Exception{
+    @RequestMapping(value="/project/{projectidx}/board/{boardidx}", method=RequestMethod.GET)
+    public ModelAndView openBoardDetail(@PathVariable("projectidx") int projectidx, @PathVariable("boardidx") int boardidx) throws Exception{
         ModelAndView mv = new ModelAndView("boardDetail");
 
         Board board = boardService.selectBoardDetail(boardidx);
         mv.addObject("board", board);
-
+        mv.addObject("projectidx",projectidx);
         return mv;
     }
 
-    @RequestMapping(value="jpa/board/{boardidx}", method=RequestMethod.PUT)
-    public String updateBoard(Board board) throws Exception{
+    @RequestMapping(value="/project/{projectidx}/board/{boardidx}", method=RequestMethod.PUT)
+    public String updateBoard(@PathVariable("projectidx") int projectidx,Board board) throws Exception{
         boardService.saveBoard(board,null);
-        return "redirect:/jpa/board";
+        return "redirect:/project/{projectidx}/board";
     }
 
-    @RequestMapping(value="jpa/board/{boardidx}", method=RequestMethod.DELETE)
+    @RequestMapping(value="/project/{projectidx}/board/{boardidx}", method=RequestMethod.DELETE)
     public String deleteBoard(@PathVariable("boardidx") int boardidx) throws Exception{
         boardService.deleteBoard(boardidx);
-        return "redirect:/jpa/board";
+        return "redirect:/project/{projectidx}/board";
     }
 
     @RequestMapping(value="/jpa/board/file", method=RequestMethod.GET)

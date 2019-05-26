@@ -25,8 +25,8 @@ public class BoardServiceImpl implements BoardService {
     FileUtils fileUtils;
 
     @Override
-    public List<Board> selectBoardList() throws  Exception {
-        return BoardRepository.findAllByOrderByBoardidxDesc();
+    public List<Board> selectBoardList(int projectidx) throws  Exception {
+        return BoardRepository.findAllByProjectidxByOrderByBoardidxDesc(projectidx);
     }
 
     @Override

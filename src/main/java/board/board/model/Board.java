@@ -29,6 +29,9 @@ public class Board {
     private int boardidx;
 
     @Column(nullable=false)
+    private int projectidx;
+
+    @Column(nullable=false)
     private String title;
 
     @Column(nullable=false)

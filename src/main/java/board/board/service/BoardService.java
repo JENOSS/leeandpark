@@ -9,7 +9,7 @@ import board.board.model.BoardFile;
 
 public interface BoardService {
 
-    List<Board> selectBoardList() throws  Exception;
+    List<Board> selectBoardList(int projectidx) throws  Exception;
 
     void updateBoard(Board board) throws Exception;
 
