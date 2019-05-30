@@ -110,7 +110,7 @@
                         생성
                     </button>&emsp;
                     <button class="btn btn-lg btn-rounded btn-outline-warning btn-icon-text" type="button"
-                            style="text-align: right">
+                            style="text-align: right" onclick="location.href='/projectHome/findProjectMember'">
                         <span class="mdi mdi-magnify btn-icon-prepend"></span>
                         검색
                     </button>
@@ -141,7 +141,8 @@
                                         <td class="title"><a href="/project/" th:attrappend="href=${list.projectidx}" th:text="${list.title}"></a></td>
                                         <td>
                                             <button class="btn btn-rounded btn-outline-info" type="button"
-                                                    style="text-align: right">
+                                                    style="text-align: right" >
+                                                <a th:href="@{/project/{projectidx}/findProjectMember(projectidx=${list.projectidx})}">
                                                 <span class="mdi mdi-account-plus"></span>
                                             </button>
                                         </td>

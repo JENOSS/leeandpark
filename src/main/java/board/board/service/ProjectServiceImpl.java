@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -53,10 +55,31 @@ public class ProjectServiceImpl implements   ProjectService{
     public int pageCheck(int projectidx) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        String pusername = projectMemberRepository.findidByProjectidx(projectidx);
-        if(username.equals(pusername)){return 1;}
-
+        List<String> pusername = projectMemberRepository.findidByProjectidx(projectidx);
+        String name;
+        Iterator<String> itr = pusername.iterator();
+        while (itr.hasNext()) {
+            name = itr.next();
+            if (username.equals(name) == true) {
+                return 1;
+            }
+        }
         return 0;
+    }
+
+    public int isMember(int projectidx,String username) {
+
+        ProjectMember pm ;
+        pm = projectMemberRepository.findByProjectidxByUsername(projectidx,username);
+        if(pm == null){ return 0;}
+        return 1;
+    }
+
+    public void addMember(int projectidx,String username) {
+       ProjectMember pm = new ProjectMember();
+       pm.setId(username);
+       pm.setProjectidx(projectidx);
+       projectMemberRepository.save(pm);
     }
 
 

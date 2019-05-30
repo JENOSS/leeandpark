@@ -1,15 +1,7 @@
 package board.board.controller;
 
-import board.board.repository.UserRepository;
-import board.board.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
@@ -31,6 +23,17 @@ public class MyController {
     public String sprint() {
 
         return "sprint";
+    }
+
+    @RequestMapping(value="/pmem", method=RequestMethod.GET)
+    public String pmem() {
+
+        return "findProjectMember";
+    }
+    @RequestMapping(value = "/pmem", method = RequestMethod.PUT)
+    @ResponseBody
+    public String helloWorld()  {
+        return "search";
     }
 
 

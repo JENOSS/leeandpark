@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 @Service
@@ -39,5 +40,10 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setName(username);
         return user;
+    }
+
+    @Override
+    public Collection<User> findByName(String username) {
+        return userRepository.findByName(username);
     }
 }

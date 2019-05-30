@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ProjectController {
@@ -66,7 +68,49 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/project/{projectidx}/findProjectMember")
+    public ModelAndView initFindForm(Map<String, Object> model,ModelAndView mv,@PathVariable int projectidx) {
+        model.put("user", new User());
+        mv.setViewName("findProjectMember");
+        mv.addObject(model);
+        mv.addObject(projectidx);
+        return mv;
+    }
+    @GetMapping("/project/{projectidx}/projectMember")
+    public ModelAndView processFindForm(User user, BindingResult result, Map<String, Object> model,ModelAndView mv,@PathVariable int projectidx) {
 
+        // allow parameterless GET request for /owners to return all records
+        if (user.getUsername() == null) {
+            user.setUsername(""); // empty string signifies broadest possible search
+        }
 
+        // find owners by last name
+        Collection<User> results = this.userService.findByName(user.getUsername());
+        if (results.isEmpty()) {
+            // no owners found
+            result.rejectValue("username", "notFound", "not found");
+            mv.setViewName("findProjectMember");
+            return mv;
+        } //else if (results.size() == 1) {
+            // 1 owner found
+            //user = results.iterator().next();
+           // return "redirect:/owners/" + owner.getId();
+        //}
+        else {
+            // multiple owners found
+            model.put("selections", results);
+            mv.addObject(model);
+            mv.addObject(projectidx);
+            mv.setViewName("projectmemberList");
+            return mv;
+        }
+    }
 
+    @GetMapping("/project/{projectidx}/{username}")
+    public String addProjectMember(@PathVariable int projectidx,@PathVariable String username) {
+        int check = projectService.isMember(projectidx,username);
+        if(check == 0)
+            projectService.addMember(projectidx,username);
+        return "redirect:/project";
+    }
 }

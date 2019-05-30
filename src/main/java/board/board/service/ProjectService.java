@@ -12,4 +12,6 @@ public interface ProjectService {
     List<Project> selectProjectList(List<ProjectMember> list) throws  Exception;
     void saveProject(Project project) throws Exception;
     int pageCheck(int projectidx) throws Exception;
+    int isMember(int projectidx,String username);
+    void addMember(int projectidx,String username);
 }
