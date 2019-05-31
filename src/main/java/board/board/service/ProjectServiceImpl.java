@@ -1,8 +1,11 @@
 package board.board.service;
 import board.board.model.Project;
 import board.board.model.ProjectMember;
+import board.board.model.Sprint;
 import board.board.repository.ProjectMemberRepository;
 import board.board.repository.ProjectRepository;
+import board.board.repository.SprintRepository;
+import board.common.CurrentDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +23,12 @@ public class ProjectServiceImpl implements   ProjectService{
     ProjectMemberRepository projectMemberRepository;
     @Autowired
     ProjectRepository projectRepository;
+
+    @Autowired
+    SprintRepository sprintRepository;
+
+    @Autowired
+    SprintService sprintService;
 
    public List<ProjectMember> selectProjectMemberList() {
        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -50,6 +59,18 @@ public class ProjectServiceImpl implements   ProjectService{
         pm.setProjectidx(projectidx);
         projectMemberRepository.save(pm);
 
+        Sprint sp = new Sprint();
+        sp.setProjectidx(projectidx);
+        sp.setLevel(0);
+        sp.setCycle(0);
+
+        CurrentDate currentDate = new CurrentDate();
+
+        sp.setYear(currentDate.year());
+        sp.setMonth(currentDate.month());
+        sp.setDate(currentDate.date());
+
+        sprintRepository.save(sp);
     }
 
     public int pageCheck(int projectidx) {

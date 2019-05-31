@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -75,7 +74,7 @@
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="welcome">
+                    <a class="nav-link" href="/sprint/"  th:attrappend="href=${pid}">
                         <i class="mdi mdi-emoticon-tongue menu-icon"></i>
                         <span class="menu-title">스프린트</span>
                     </a>
@@ -87,7 +86,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/project/{projectidx}/board(projectidx=${projectidx})}">
+                    <a class="nav-link" href="notice">
                         <i class="mdi mdi-view-headline menu-icon"></i>
                         <span class="menu-title">게시판</span>
                     </a>
