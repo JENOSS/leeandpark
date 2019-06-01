@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,8 @@ public class ProjectController {
 
     @RequestMapping(value="/project/write", method=RequestMethod.POST)
     public String writeBoard(Project project) throws Exception{
+        GregorianCalendar today = new GregorianCalendar();
+
         projectService.saveProject(project);
         return "redirect:/project";
     }
