@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Master Plan</title>
+    <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../vendors/base/vendor.bundle.base.css">
+    <link rel="stylesheet" href="../../vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/animate.css">
+    <!--    <link rel="stylesheet" href="../../css/jquery-ui.min.css">-->
+    <!--    <link rel="stylesheet" href="../../css/jquery-ui.theme.min.css">-->
+    <!--    <link rel="stylesheet" href="../../css/jquery-ui.structure.min.css">-->
+    <!--        <script src="../../js/jquery-3.4.1.min.js" type="text/javascript">-->
+    <link rel="shortcut icon" href="../../images/clip.jpg"/>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/earlyaccess/nanumgothic.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/earlyaccess/jejuhallasan.css">
+    <!--    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+    <!--    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .dr {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            cursor: pointer;
+        }
+
+        post {
+            font-family: arial, sans-serif;
+            font-size: 100%;
+            margin: 1em;
+            background: #666;
+            color: #fff;
+        }
+
+        hp {
+            font-size: 45%;
+            font-weight: normal;
+        }
+
+        uul, lli {
+            list-style: none;
+        }
+
+        uul {
+            overflow: hidden;
+            padding: 3em;
+        }
+
+        uul lli a {
+            text-decoration: none;
+            color: #000;
+            background: #ffc;
+            display: block;
+            height: 4.5em;
+            width: 4.5em;
+            padding: 0.5em;
+            -moz-box-shadow: 5px 5px 7px rgba(33, 33, 33, 1);
+            -webkit-box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+            box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+            -moz-transition: -moz-transform .15s linear;
+            -o-transition: -o-transform .15s linear;
+            -webkit-transition: -webkit-transform .15s linear;
+        }
+
+        uul lli {
+            margin: 0.5em;
+            float: left;
+        }
+
+        uul lli h2 {
+            font-size: 140%;
+            font-weight: bold;
+            padding-bottom: 10px;
+        }
+
+        uul lli a {
+            -webkit-transform: rotate(-6deg);
+            -o-transform: rotate(-6deg);
+            -moz-transform: rotate(-6deg);
+            z-index: 8;
+        }
+
+        uul lli:nth-child(even) a {
+            -o-transform: rotate(4deg);
+            -webkit-transform: rotate(4deg);
+            -moz-transform: rotate(4deg);
+            position: relative;
+            top: 5px;
+            background: #cfc;
+        }
+
+        uul lli:nth-child(3n) a {
+            -o-transform: rotate(-3deg);
+            -webkit-transform: rotate(-3deg);
+            -moz-transform: rotate(-3deg);
+            position: relative;
+            top: -5px;
+            background: #ccf;
+        }
+
+        uul lli:nth-child(5n) a {
+            -o-transform: rotate(5deg);
+            -webkit-transform: rotate(5deg);
+            -moz-transform: rotate(5deg);
+            position: relative;
+            top: -10px;
+        }
+
+        uul lli a:hover, ul li a:focus {
+            box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+            -moz-box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+            -webkit-box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+            -webkit-transform: scale(2.5);
+            -moz-transform: scale(2.5);
+            -o-transform: scale(2.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        ol {
+            text-align: center;
+        }
+
+        ol lli {
+            display: inline;
+            padding-right: 1em;
+        }
+
+        ol lli a {
+            color: #fff;
+        }
+    </style>
+    <style type="text/css">
+        se {
+            /*font-family: Segoe Script;*/
+            font-family: 'Jeju Hallasan', serif;
+            font-size: 35px;
+            color: darkslategray;
+        }
+
+        /*.post {*/
+        /*    !*font-family: "Nanum Pen Script", serif;*!*/
+        /*    background-color: #ffdc1c;*/
+        /*    font-size: 9px;*/
+        /*    width: 100px;*/
+        /*    height: 60px;*/
+        /*    padding: 10px 10px 10px 10px;*/
+        /*    border: 1px solid black;*/
+        /*    box-shadow: 2px 2px 2px;*/
+        /*    transition: transform .2s;*/
+        /*}*/
+
+        /*.post:hover {*/
+        /*    transform: scale(2);*/
+        /*}*/
+    </style>
+    <script>
+        jQuery.noConflict();
+        jQuery( document ).ready(function ( $ ) {
+            $("#mini").bind("click", function () {
+                $("#mini").trigger('click')
+            })
+        });
+    </script>
+    <script>
+        jQuery.noConflict();
+        jQuery( document ).ready(function ( $ ) {
+            $(".dr").draggable({
+            })
+            $("#todo", "#doing", "#done").droppable({
+                over: function (event, ui) {
+                }
+            })
+        });
+    </script>
+</head>
+
+<body>
+<div class="container-scroller font">
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="navbar-brand-wrapper d-flex justify-content-center">
+            <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+                <a class="navbar-brand brand-logo" href="../../../templates/index.html"><img
+                        src="../../images/mpp.png" alt="logo"/></a>
+                <a class="navbar-brand brand-logo-mini" href="../../../templates/index.html"><img
+                        src="../../images/mpmp.png"
+                        alt="logo"/></a>
+                <button id="mini" class="navbar-toggler navbar-toggler align-self-center" type="button"
+                        data-toggle="minimize">
+                    <span class="mdi mdi-sort-variant"></span>
+                </button>
+            </div>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <ul class="navbar-nav mr-lg-4 w-100">
+                <li class="nav-item nav-search d-none d-lg-block w-100">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item nav-profile dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                        <img src="../../images/faces/face_non.png" alt="profile"/>
+                        <span class="nav-profile-name">Louis Barnett</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item">
+                            <i class="mdi mdi-settings text-primary"></i>
+                            Settings
+                        </a>
+                        <a class="dropdown-item">
+                            <i class="mdi mdi-logout text-primary"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                <span class="mdi mdi-menu"></span>
+            </button>
+        </div>
+    </nav>
+    <div class="container-fluid page-body-wrapper">
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../templates/index.html">
+                        <i class="mdi mdi-home menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../templates/welcome.html">
+                        <i class="mdi mdi-emoticon-tongue menu-icon"></i>
+                        <span class="menu-title">스프린트</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../templates/storage.html">
+                        <i class="mdi mdi-cloud menu-icon"></i>
+                        <span class="menu-title">저장소</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../templates/project.html">
+                        <i class="mdi mdi-view-headline menu-icon"></i>
+                        <span class="menu-title">게시판</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../templates/teamchat.html">
+                        <i class="mdi mdi-wechat menu-icon"></i>
+                        <span class="menu-title">팀 채팅</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../templates/schedule.html">
+                        <i class="mdi mdi-calendar menu-icon"></i>
+                        <span class="menu-title">일정</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                       aria-controls="ui-basic">
+                        <i class="mdi mdi-circle-outline menu-icon"></i>
+                        <span class="menu-title">UI Elements</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="ui-basic">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    href="../../pages/ui-features/buttons.html">Buttons</a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link"
+                                                    href="../../pages/ui-features/typography.html">Typography</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+                        <i class="mdi mdi-account menu-icon"></i>
+                        <span class="menu-title">User Pages</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="auth">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="../../../templates/login.html"> Login </a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link" href="../../../templates/register.html">
+                                Register </a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link" href="../../../templates/welcome.html">
+                                welcome </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-12 grid-margin">
+                        <div class="card">
+                            <div class="card-body">
+                                    <span>
+                                        <h2><div
+                                                class="mdi mdi-lightbulb btn-icon-prepend font-weight-bold">&nbsp<strong>Scrum Board</strong></div></h2>
+                                        <br>
+                                        <h5><strong>스프린트 3단계, </strong>진행상황에 따라 포스트잇을 붙여주세요.</h5>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display: flex;">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body" style="height: 600px;">
+                                <div id="todo" class="col-4"
+                                     style="float: left; height: 550px; border: 2px solid black; border-right: none; z-index: auto">
+                                    <br>
+                                    <div style="text-align: center">
+                                        <se>To-do</se>
+                                    </div><hr>
+
+                                    <uul th:if="${#lists.size(todo)} > 0" th:each="todo : ${todo}">
+                                        <lli>
+                                            <a class="dr">
+                                                <hp th:text="${todo.contents}"></hp>
+                                            </a>
+                                        </lli>
+                                    </uul>
+                                </div>
+                                <div id="doing" class="col-4"
+                                     style="float: left; height: 550px; border: 2px solid black; z-index: auto">
+                                    <br>
+                                    <div style="text-align: center;">
+                                        <se>Doing</se>
+                                    </div><hr>
+                                    <uul th:if="${#lists.size(doing)} > 0" th:each="doing : ${doing}">
+                                        <lli>
+                                            <a class="dr">
+                                                <hp th:text="${doing.contents}"></hp>
+                                            </a>
+                                        </lli>
+                                    </uul>
+                                </div>
+                                <div id="done" class="col-4"
+                                     style="float: left; height: 550px; border: 2px solid black; border-left: none; z-index: auto;">
+                                    <br>
+                                    <div style="text-align: center;">
+                                        <se>Done</se>
+                                    </div><hr>
+                                    <uul>
+                                        <lli>
+                                            <a class="dr">
+                                                <hp>오레오 씬즈</hp>
+                                            </a>
+                                        </lli>
+                                    </uul>
+                                    <uul th:if="${#lists.size(done)} > 0" th:each="done : ${done}">
+                                        <lli>
+                                            <a class="dr">
+                                                <hp th:text="${done.contents}"></hp>
+                                            </a>
+                                        </lli>
+                                    </uul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+
+</script>
+
+<script src="../../vendors/base/vendor.bundle.base.js"></script>
+<script src="../../vendors/chart.js/Chart.min.js"></script>
+<script src="../../vendors/datatables.net/jquery.dataTables.js"></script>
+<script src="../../vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<script src="../../js/off-canvas.js"></script>
+<script src="../../js/hoverable-collapse.js"></script>
+<script src="../../js/template.js"></script>
+<script src="../../js/dashboard.js"></script>
+<script src="../../js/data-table.js"></script>
+<script src="../../js/jquery.dataTables.js"></script>
+<script src="../../js/dataTables.bootstrap4.js"></script>
+</body>
+
+</html>

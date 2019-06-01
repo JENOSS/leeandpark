@@ -250,10 +250,15 @@
                                                 type: "POST",
                                                 contentType : "application/json",
                                                 data: JSON.stringify(obj),
-                                                dataType : 'json',
                                                 success: function (data) {
+                                                    console.log(data);
                                                     alert(data);
                                                     $('#add_backlog')[0].reset();
+                                                    location.href = "/sprint_plan/"+sprintid
+                                                },
+                                                error: function (request, status, error) {
+                                                    alert(request);
+                                                    console.log(request);
                                                 }
                                             });
                                         });

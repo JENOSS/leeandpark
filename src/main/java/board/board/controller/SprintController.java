@@ -15,8 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class SprintController {
@@ -87,60 +86,55 @@ public class SprintController {
         return mv;
     }
 
-/*
-    @RequestMapping(value="/sprint_backlog/{sprintid}", method= RequestMethod.POST)
-    public ModelAndView sprintbacklog_post(SprintBacklog sprintbacklog, @PathVariable Long sprintid) throws Exception{
-
-        sprintbacklog.setSprintid(sprintid);
-        sprintbacklog.setIsdoing("no");
-
-        sprintBacklogRepository.save(sprintbacklog);
-
-        ModelAndView mv = new ModelAndView("redirect:/sprint_backlog/{sprintid}");
-        mv.addObject("sprintid",sprintid);
-
-        return mv;
-
-    }
-*/
-
-    @RequestMapping(value = "/sprint_backlog/{sprintid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/sprint_backlog/{sprintid}/save", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView addbacklog(@ModelAttribute SprintBacklog sprintBacklog, @PathVariable Long sprintid) {
+    public String postBacklog(@RequestBody Map<String, ArrayList> backlog, @PathVariable Long sprintid) {
+        ArrayList<String> ary= (backlog.get("result"));
+        int size = ary.size();
+        int i;
+        for(i=0;i<size;i++) {
+            SprintBacklog sb = new SprintBacklog();
+            sb.setSprintid(sprintid);
+            sb.setContents(ary.get(i));
+            sb.setIsdoing("no");
+            sprintBacklogRepository.save(sb);
+        }
 
-        ModelAndView mv = new ModelAndView("redirect:/sprint_backlog/{sprintid}");
-
-        sprintBacklog.setSprintid(sprintid);
-        sprintBacklog.setIsdoing("no");
-
-        sprintBacklogRepository.save(sprintBacklog);
-        sprintBacklogRepository.findBySprintid(sprintid) ;
-
-        List<SprintBacklog> list = sprintBacklogRepository.findBySprintid(sprintid);
-        mv.addObject("list", list);
-
-        System.out.println(list);
-        return mv;
-
-
+        return "backlog 완료";
     }
 
 
-    @RequestMapping(value="/sprint_plan/{sprintid}", method= RequestMethod.GET)
+        @RequestMapping(value="/sprint_plan/{sprintid}", method= RequestMethod.GET)
     public ModelAndView sprinplan_get(@PathVariable Long sprintid) throws Exception{
         ModelAndView mv = new ModelAndView("sprint_plan");
         mv.addObject("sprintid",sprintid);
 
-
         Sprint sp = sprintRepository.findBySprintid(sprintid);
-
         if (sp.getLevel() < 2)
             sprintRepository.updateLevelBySprintid(sprintid,2);
 
-
+        //backlog 가져오기
+        //mv.addObject(backlog)
         return mv;
     }
 
+    @RequestMapping(value = "/sprint_plan/{sprintid}/{cycle}/save", method = RequestMethod.POST)
+    @ResponseBody
+    public String postToDo(@RequestBody Map<String, ArrayList> todo, @PathVariable("sprintid") Long sprintid,@PathVariable("cycle") int cycle) {
+        ArrayList<String> ary= (todo.get("result"));
+        int size = ary.size();
+        int i;
+        for(i=0;i<size;i++) {
+            SprintTodo td = new SprintTodo();
+            td.setSprintid(sprintid);
+            td.setContents(ary.get(i));
+            td.setCycle(cycle);
+            sprinttodoRepository.save(td);
+        }
+        sprintRepository.updateCycleBySprintid(sprintid, cycle);
+        return "plan 완료";
+    }
+/*
     @RequestMapping(value="/sprint_plan/{sprintid}", method= RequestMethod.POST)
     public ModelAndView sprintplan_post(SprintTodo sprinttodo, @PathVariable Long sprintid) throws Exception{
 
@@ -156,21 +150,15 @@ public class SprintController {
 
         // sprintid에 해당하는 sprint 의 cycle 여기서 설정
         sprintRepository.updateCycleBySprintid(sprintid, sprinttodo.getCycle());
-
-
         ModelAndView mv = new ModelAndView("redirect:/scrumboard/{sprintid}");
         mv.addObject("sprintid",sprintid);
-
-
         return mv;
-
     }
-
-
+*/
 
     @RequestMapping(value="/scrumboard/{sprintid}", method= RequestMethod.GET)
     public ModelAndView scrumboard_get(@PathVariable Long sprintid) throws Exception{
-        ModelAndView mv = new ModelAndView("scrumboard");
+        ModelAndView mv = new ModelAndView("sprintScrumBoard");
         mv.addObject("sprintid",sprintid);
 
         Sprint sp = sprintRepository.findBySprintid(sprintid);
@@ -178,7 +166,7 @@ public class SprintController {
         //경과일 = 스프린트 생성날짜- 현재 날짜
         int pass = sprintService.dateCheck(sp.getYear(),sp.getMonth(),sp.getDate());
         int diff = cycle-pass;
-
+        int size=0;
         //설정된 주기
         mv.addObject("cycle",cycle);
 
@@ -196,6 +184,27 @@ public class SprintController {
            mv.addObject("msg","스프린트 기간이 끝났습니다. 스프린트 회고로 넘어가 주세요 !");
         }
 
+        List<SprintTodo> todolist = sprinttodoRepository.findBySprintid(sprintid);
+        List<SprintTodo> todo = new ArrayList<>();
+        List<SprintTodo> doing = new ArrayList<>();
+        List<SprintTodo> done = new ArrayList<>();
+        size = todolist.size();
+        for(int i=0;i<size;i++){
+            if((todolist.get(i).getIsdone()).equals("Y")) { //equal로 바꿔야댐 (null바꿔야댐)
+                done.add(todolist.get(i));
+            }
+            else if((todolist.get(i).getIsdoing()).equals("Y")) { //equal
+                doing.add(todolist.get(i));
+            }
+            else {
+                todo.add(todolist.get(i));
+            }
+        }
+
+        mv.addObject("todo",todo);
+        mv.addObject("doing",doing);
+        mv.addObject("done",done);
+
         return mv;
     }
 
@@ -209,11 +218,8 @@ public class SprintController {
         if (sp.getLevel() < 4)
             sprintRepository.updateLevelBySprintid(sprintid,4);
 
-
         return mv;
     }
-
-
 
 
 
