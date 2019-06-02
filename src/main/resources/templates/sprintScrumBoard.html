@@ -172,11 +172,6 @@
             $("#mini").bind("click", function () {
                 $("#mini").trigger('click')
             })
-        });
-    </script>
-    <script>
-        jQuery.noConflict();
-        jQuery( document ).ready(function ( $ ) {
             $(".dr").draggable({
             })
             $("#todo", "#doing", "#done").droppable({
@@ -185,6 +180,7 @@
             })
         });
     </script>
+
 </head>
 
 <body>
@@ -218,7 +214,7 @@
                         <img src="../../images/faces/face_non.png" alt="profile"/>
                         <span class="nav-profile-name">Louis Barnett</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                    <div class="dr=;opdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                         <a class="dropdown-item">
                             <i class="mdi mdi-settings text-primary"></i>
                             Settings
@@ -334,6 +330,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body" style="height: 600px;">
+
                                 <div id="todo" class="col-4"
                                      style="float: left; height: 550px; border: 2px solid black; border-right: none; z-index: auto">
                                     <br>
@@ -341,10 +338,11 @@
                                         <se>To-do</se>
                                     </div><hr>
 
-                                    <uul th:if="${#lists.size(todo)} > 0" th:each="todo : ${todo}">
+                                    <uul th:if="${#lists.size(todo)} > 0" th:each="todo : ${todo}" name="postit">
                                         <lli>
                                             <a class="dr">
                                                 <hp th:text="${todo.contents}"></hp>
+                                                <input type="hidden" th:value="${todo.todoid}" />
                                             </a>
                                         </lli>
                                     </uul>
@@ -355,10 +353,11 @@
                                     <div style="text-align: center;">
                                         <se>Doing</se>
                                     </div><hr>
-                                    <uul th:if="${#lists.size(doing)} > 0" th:each="doing : ${doing}">
+                                    <uul th:if="${#lists.size(doing)} > 0" th:each="doing : ${doing}" name="postit">
                                         <lli>
                                             <a class="dr">
                                                 <hp th:text="${doing.contents}"></hp>
+                                                <input type="hidden" th:value="${doing.todoid}" />
                                             </a>
                                         </lli>
                                     </uul>
@@ -369,21 +368,21 @@
                                     <div style="text-align: center;">
                                         <se>Done</se>
                                     </div><hr>
-                                    <uul>
-                                        <lli>
-                                            <a class="dr">
-                                                <hp>오레오 씬즈</hp>
-                                            </a>
-                                        </lli>
-                                    </uul>
-                                    <uul th:if="${#lists.size(done)} > 0" th:each="done : ${done}">
+                                    <uul th:if="${#lists.size(done)} > 0" th:each="done : ${done}" name="postit">
                                         <lli>
                                             <a class="dr">
                                                 <hp th:text="${done.contents}"></hp>
+                                                <input type="hidden" th:value="${done.todoid}" />
                                             </a>
                                         </lli>
                                     </uul>
                                 </div>
+                                <tr>
+                                    <td><input type="button" name="submit" id="submit" class="btn btn-info" value="저장"/></td>
+                                    <td><input type="button" name="submit" id="next" class="btn btn-info" value="완료"/></td>
+                                    <input type="hidden" id="sprintid" name="sprintid" th:value="${sprintid}">
+
+                                </tr>
                             </div>
                         </div>
                     </div>
@@ -395,9 +394,62 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+        var sprintid = $("#sprintid").val();
+        $('#submit').click(function () {
+            // $("#todo uul lli a hp").each(function (i) {
+            var array = new Array($("div.col-4 uul lli a").length);
+            var jarray = new Array();
+            $("div.col-4 uul lli a").each(function (i) {
+                //alert($(this).children("hp").offset().left + " " + $(this).children("input").val());
+                if ($(this).children("hp").offset().left < 600) {
+                    var obj = {
+                        id: $(this).children("input").val(),
+                        isdoing: "N",
+                        isdone: "N"
+                    }
+                    array[i] = obj;
+                } else if ($(this).children("hp").offset().left < 950) {
+                    var obj = {
+                        id: $(this).children("input").val(),
+                        isdoing: "Y",
+                        isdone: "N"
+                    }
+                    array[i] = obj;
+                } else {
+                    var obj = {
+                        id: $(this).children("input").val(),
+                        isdoing: "N",
+                        isdone: "Y"
+                    }
+                    array[i] = obj;
+                }
+            });
+            var obj2= {
+                result:array
+            }
 
-
-
+            $.ajax({
+                url: window.location + "/save",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(obj2),
+                success: function (data) {
+                    console.log(data);
+                    alert(data);
+                    //location.href = "/sprint_re/" + sprintid
+                },
+                error: function (request, status, error) {
+                    alert(request);
+                    console.log(request);
+                }
+            });
+        });
+        $('#next').click(function () {
+            $( "#submit" ).trigger( "click" );
+            location.href = "/sprint_re/" + sprintid
+        });
+    });
 </script>
 
 <script src="../../vendors/base/vendor.bundle.base.js"></script>

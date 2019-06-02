@@ -21,6 +21,8 @@ public class SprintBacklog {
 
     private String isdoing;
 
+    private String isdone;
+
     public Long getBacklogid() {
         return backlogid;
     }
@@ -51,5 +53,13 @@ public class SprintBacklog {
 
     public void setIsdoing(String isdoing) {
         this.isdoing = isdoing;
+    }
+
+    public String getIsdone() {
+        return isdone;
+    }
+
+    public void setIsdone(String isdone) {
+        this.isdone = isdone;
     }
 }

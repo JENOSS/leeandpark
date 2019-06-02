@@ -96,13 +96,12 @@ public class SprintController {
             SprintBacklog sb = new SprintBacklog();
             sb.setSprintid(sprintid);
             sb.setContents(ary.get(i));
-            sb.setIsdoing("no");
+            sb.setIsdoing("N");
+            sb.setIsdone("N");
             sprintBacklogRepository.save(sb);
         }
-
         return "backlog 완료";
     }
-
 
         @RequestMapping(value="/sprint_plan/{sprintid}", method= RequestMethod.GET)
     public ModelAndView sprinplan_get(@PathVariable Long sprintid) throws Exception{
@@ -113,8 +112,8 @@ public class SprintController {
         if (sp.getLevel() < 2)
             sprintRepository.updateLevelBySprintid(sprintid,2);
 
-        //backlog 가져오기
-        //mv.addObject(backlog)
+        List<SprintBacklog> backlogs= sprintBacklogRepository.findBySprintid(sprintid);
+        mv.addObject("backlogs",backlogs);
         return mv;
     }
 
@@ -122,15 +121,26 @@ public class SprintController {
     @ResponseBody
     public String postToDo(@RequestBody Map<String, ArrayList> todo, @PathVariable("sprintid") Long sprintid,@PathVariable("cycle") int cycle) {
         ArrayList<String> ary= (todo.get("result"));
+        ArrayList<String> ary2= (todo.get("result2"));
+
         int size = ary.size();
+        int size2 = ary2.size();
         int i;
+        Long backlogid;
         for(i=0;i<size;i++) {
             SprintTodo td = new SprintTodo();
             td.setSprintid(sprintid);
             td.setContents(ary.get(i));
             td.setCycle(cycle);
+            td.setIsdoing("N");
+            td.setIsdone("N");
             sprinttodoRepository.save(td);
         }
+        for(i=0;i<size2;i++) {
+            backlogid = Long.parseLong(ary2.get(i));
+            sprintBacklogRepository.updateToDoing(backlogid);
+        }
+
         sprintRepository.updateCycleBySprintid(sprintid, cycle);
         return "plan 완료";
     }
@@ -190,7 +200,7 @@ public class SprintController {
         List<SprintTodo> done = new ArrayList<>();
         size = todolist.size();
         for(int i=0;i<size;i++){
-            if((todolist.get(i).getIsdone()).equals("Y")) { //equal로 바꿔야댐 (null바꿔야댐)
+            if((todolist.get(i).getIsdone()).equals("Y")) {
                 done.add(todolist.get(i));
             }
             else if((todolist.get(i).getIsdoing()).equals("Y")) { //equal
@@ -204,8 +214,34 @@ public class SprintController {
         mv.addObject("todo",todo);
         mv.addObject("doing",doing);
         mv.addObject("done",done);
-
+        mv.addObject("sprintid",sprintid);
         return mv;
+    }
+
+    @RequestMapping(value = "/scrumboard/{sprintid}/save", method = RequestMethod.POST)
+    @ResponseBody
+    public String scrumboard_post(@RequestBody Map<String, ArrayList> todoList ,@PathVariable Long sprintid) throws Exception{
+        int size=0;
+        Long todoId;
+        String isdoing;
+        String isdone;
+        ArrayList<Map<String,Object>> ary = todoList.get("result");
+
+
+        for(int i=0;i<ary.size();i++) {
+            //SprintTodo td = new SprintTodo();
+            todoId = Long.parseLong((String)ary.get(i).get("id"));
+            isdoing = (String)ary.get(i).get("isdoing");
+            isdone = (String)ary.get(i).get("isdone");
+           // sprinttodoRepository.updateInquiry(todoId,isdoing,isdone);
+           // td.setTodoid(todoId);
+           // td.setIsdoing(isdoing);
+          //  td.setIsdoing(isdone);
+            //td.setSprintid(sprintid);
+            sprinttodoRepository.updateInquiry(todoId,isdoing,isdone);
+        }
+
+        return "저장 완료";
     }
 
     @RequestMapping(value="/sprint_re/{sprintid}", method= RequestMethod.GET)

@@ -184,6 +184,12 @@
                                         <td><h4>주기 설정(일): </h4></td>
                                         <td><input th:type="text" id="cycle" ></td>
                                     </tr>
+                                    <tr th:each="backlog : ${backlogs}">
+                                        <td th:text="${backlog.contents}"></td>
+                                        <td>
+                                            <input th:name="checkBox" th:value="${backlog.backlogid}" class="checkBox" type="checkbox">
+                                        </td>
+                                    </tr>
                                 <table onload="MoveFocus();" frame="void"
                                        class="table table-info font-weight-bold"
                                        style="width: 600px; float: top"
@@ -231,6 +237,7 @@
 <script>
     $(document).ready(function () {
         var sprintid = $("#sprintid").val();
+        var backids = {};
         var i = 1;
         $('#newrows').click(function () {
             i++;
@@ -242,6 +249,8 @@
             $('#row' + button_id + '').remove();
         });
 
+
+
         $('#submit').click(function () {
             // alert($('input[name="blog"]').eq(0).val() + " " + $('input[name="blog"]').eq(1).val());
             var cycle = $("#cycle").val();
@@ -250,11 +259,24 @@
                 array[i] = $(this).val();
             })
 
-            var obj= {
-                result:array
+
+            var size = $("input[name='checkBox']:checked").length;
+            var array2 = new Array(size);
+            $("input[name='checkBox']:checked").each(function(i) {
+                var checkBox = $(this);
+                //var tr = checkBox.parent().parent();
+                //var td = tr.children();
+                //var backid = td.eq(1).val();
+                array2[i] = checkBox.val();
+                //alert(array2[i]);
+            });
+            //alert(array2);
+            var obj = {
+                result:array,
+                result2:array2
             }
 
-             alert(JSON.stringify(obj));
+            alert(JSON.stringify(obj));
             $.ajax({
                 url: window.location+ "/"+cycle +"/save",
                 type: "POST",
