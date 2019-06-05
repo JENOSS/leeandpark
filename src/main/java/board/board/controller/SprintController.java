@@ -66,8 +66,28 @@ public class SprintController {
     @RequestMapping(value="/sprint_start/{sprintid}", method= RequestMethod.GET)
     public ModelAndView sprintstart_get(@PathVariable Long sprintid) throws Exception{
         ModelAndView mv = new ModelAndView("sprint_start");
-        mv.addObject("sprintid",sprintid);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Sprint sp = sprintRepository.findBySprintid(sprintid);
+        int projectidx = sp.getProjectidx();
+
+        //전체 프로그레스바
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+        mv.addObject("projectidx",projectidx);
+        mv.addObject("sprintid",sprintid);
+        mv.addObject("username",username);
+        mv.addObject("backlog_progress",backlog_progress);
+        mv.addObject("backlog_done",backlog_done);
         return mv;
     }
 
@@ -78,6 +98,29 @@ public class SprintController {
         mv.addObject("sprintid",sprintid);
 
         Sprint sp = sprintRepository.findBySprintid(sprintid);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        int projectidx = sp.getProjectidx();
+
+        //전체 프로그레스바
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+
+        mv.addObject("projectidx",projectidx);
+        mv.addObject("username",username);
+        mv.addObject("backlog_progress",backlog_progress);
+        mv.addObject("backlog_done",backlog_done);
+
+
 
         if (sp.getLevel() < 1)
             sprintRepository.updateLevelBySprintid(sprintid,1);
@@ -109,10 +152,31 @@ public class SprintController {
         mv.addObject("sprintid",sprintid);
 
         Sprint sp = sprintRepository.findBySprintid(sprintid);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        int projectidx = sp.getProjectidx();
+
+        //전체 프로그레스바
+            int backlog_all = projectService.progressBacklog(projectidx);
+
+            int backlog_done = projectService.progressBacklog_done(projectidx);
+
+            double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+        mv.addObject("projectidx",projectidx);
+        mv.addObject("username",username);
+        mv.addObject("backlog_progress",backlog_progress);
+
+        mv.addObject("backlog_done",backlog_done);
+
         if (sp.getLevel() < 2)
             sprintRepository.updateLevelBySprintid(sprintid,2);
 
-        List<SprintBacklog> backlogs= sprintBacklogRepository.findTodoBySprintid(sprintid);
+        List<SprintBacklog> backlogs= sprintBacklogRepository.findBySprintid(sprintid);
         mv.addObject("backlogs",backlogs);
         return mv;
     }
@@ -122,6 +186,9 @@ public class SprintController {
     public String postToDo(@RequestBody Map<String, ArrayList> todo, @PathVariable("sprintid") Long sprintid,@PathVariable("cycle") int cycle) {
         ArrayList<String> ary= (todo.get("result"));
         ArrayList<String> ary2= (todo.get("result2"));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
 
         int size = ary.size();
         int size2 = ary2.size();
@@ -144,6 +211,7 @@ public class SprintController {
         sprintRepository.updateCycleBySprintid(sprintid, cycle);
         return "plan 완료";
     }
+
 
     @RequestMapping(value="/scrumboard/{sprintid}", method= RequestMethod.GET)
     public ModelAndView scrumboard_get(@PathVariable Long sprintid) throws Exception{
@@ -190,10 +258,30 @@ public class SprintController {
             }
         }
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        int projectidx = sp.getProjectidx();
+
+        //전체 프로그레스바
+
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+        mv.addObject("username",username);
+        mv.addObject("backlog_progress",backlog_progress);
+        mv.addObject("backlog_done",backlog_done);
+        mv.addObject("projectidx",projectidx);
+
         mv.addObject("todo",todo);
         mv.addObject("doing",doing);
         mv.addObject("done",done);
-        mv.addObject("sprintid",sprintid);
         return mv;
     }
 
@@ -204,6 +292,7 @@ public class SprintController {
         Long todoId;
         String isdoing;
         String isdone;
+        String username;
         ArrayList<Map<String,Object>> ary = todoList.get("result");
 
 
@@ -212,12 +301,13 @@ public class SprintController {
             todoId = Long.parseLong((String)ary.get(i).get("id"));
             isdoing = (String)ary.get(i).get("isdoing");
             isdone = (String)ary.get(i).get("isdone");
+            username = (String)ary.get(i).get("username");
            // sprinttodoRepository.updateInquiry(todoId,isdoing,isdone);
            // td.setTodoid(todoId);
            // td.setIsdoing(isdoing);
           //  td.setIsdoing(isdone);
             //td.setSprintid(sprintid);
-            sprinttodoRepository.updateInquiry(todoId,isdoing,isdone);
+            sprinttodoRepository.updateInquiry(todoId,isdoing,isdone,username);
         }
 
         return "저장 완료";
@@ -229,64 +319,35 @@ public class SprintController {
         mv.addObject("sprintid",sprintid);
 
         Sprint sp = sprintRepository.findBySprintid(sprintid);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        int projectidx = sp.getProjectidx();
+
+        //전체 프로그레스바
+
+        int backlog_doing = projectService.progressBacklog_doing(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_doing/(double)backlog_done)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+        mv.addObject("projectidx",projectidx);
+        mv.addObject("username",username);
+       // mv.addObject("backlog_progress",backlog_progress);
+       // mv.addObject("backlog_doing",backlog_doing);
+       // mv.addObject("backlog_done",backlog_done);
+
+
         if (sp.getLevel() < 4)
             sprintRepository.updateLevelBySprintid(sprintid,4);
-
-        int size=0;
-        List<SprintTodo> todolist = sprinttodoRepository.findBySprintid(sprintid);
-        List<SprintTodo> todo = new ArrayList<>();
-        List<SprintTodo> doing = new ArrayList<>();
-        List<SprintTodo> done = new ArrayList<>();
-        size = todolist.size();
-        for(int i=0;i<size;i++){
-            if((todolist.get(i).getIsdone()).equals("Y")) {
-                done.add(todolist.get(i));
-            }
-            else if((todolist.get(i).getIsdoing()).equals("Y")) { //equal
-                doing.add(todolist.get(i));
-            }
-            else {
-                todo.add(todolist.get(i));
-            }
-        }
-
-        List<SprintBacklog> backlogDoingList = sprintBacklogRepository.findDoingBySprintid(sprintid);
-
-        mv.addObject("todo",todo);
-        mv.addObject("doing",doing);
-        mv.addObject("done",done);
-        mv.addObject("backlogs",backlogDoingList);
 
         return mv;
     }
 
-    @RequestMapping(value = "/sprint_re/{sprintid}/save", method = RequestMethod.POST)
-    @ResponseBody
-    public String sprintre_post(@RequestBody Map<String, ArrayList> result, @PathVariable Long sprintid) throws Exception {
 
-        ArrayList<String> ary = (result.get("resultBacklogDone"));
-        ArrayList<String> ary2 = (result.get("resultText"));
 
-        int size = ary.size();
-        Long backlogid;
-        for (int i = 0; i < size; i++) {
-            backlogid = Long.parseLong(ary.get(i));
-            sprintBacklogRepository.updateDone(backlogid);
-        }
-        List<SprintTodo> todolist = sprinttodoRepository.findBySprintid(sprintid);
-        size = todolist.size();
-
-        for (int i = 0; i < size; i++) {
-            sprinttodoRepository.deleteUsingSingleQuery(sprintid);
-        }
-
-        sprintRepository.updateLevelBySprintid(sprintid, 2);
-
-        if (sprintBacklogRepository.findTodoBySprintid(sprintid).size() == 0) {
-            return "스프린트 종료";
-        }
-        else {
-            return "스프린트 계획으로 돌아갑니다.";
-        }
-    }
 }

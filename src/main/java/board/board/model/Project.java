@@ -25,15 +25,36 @@ public class Project {
     @Column(nullable=false)
     private String contents;
 
-    private int startedday;
+    private int year;
 
-    public int getStartedday() {
-        return startedday;
+    private int month;
+
+    private int date;
+
+    public int getYear() {
+        return year;
     }
 
-    public void setStartedday(int startedday) {
-        this.startedday = startedday;
+    public void setYear(int year) {
+        this.year = year;
     }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
+    }
+
 
     public int getProjectidx() {
         return projectidx;

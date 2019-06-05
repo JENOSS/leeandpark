@@ -14,4 +14,9 @@ public interface ProjectService {
     int pageCheck(int projectidx) throws Exception;
     int isMember(int projectidx,String username);
     void addMember(int projectidx,String username);
+
+    int progressBacklog(int projectidx);
+    int progressBacklog_doing(int projectidx);
+    int progressBacklog_done(int projectidx);
+
 }

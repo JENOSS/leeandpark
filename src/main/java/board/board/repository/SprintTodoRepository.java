@@ -18,11 +18,6 @@ public interface SprintTodoRepository extends JpaRepository<SprintTodo, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE SprintTodo std SET std.isdoing =:isdoing, std.isdone =:isdone WHERE std.todoid =:todoId")
-    void updateInquiry(@Param("todoId") Long todoId,@Param("isdoing") String isdoing,@Param("isdone") String isdone);
-
-    @Modifying
-    @Transactional
-    @Query("delete from SprintTodo sptodo where sptodo.sprintid = :sprintid")
-    void deleteUsingSingleQuery(@Param("sprintid") Long sprintid);
+    @Query("UPDATE SprintTodo std SET std.isdoing =:isdoing, std.isdone =:isdone ,std.username =:username WHERE std.todoid =:todoId")
+    void updateInquiry(@Param("todoId") Long todoId,@Param("isdoing") String isdoing,@Param("isdone") String isdone, @Param("username") String username);
 }

@@ -6,8 +6,14 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import board.board.model.Sprint;
+import board.board.repository.SprintRepository;
+import board.board.service.ProjectService;
+import board.board.service.SprintService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,33 +32,126 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private SprintService sprintService;
+
+    @Autowired
+    private SprintRepository sprintRepository;
+
     @RequestMapping(value="/project/{projectidx}/board", method=RequestMethod.GET)
     public ModelAndView openBoardList(@PathVariable("projectidx") int projectidx) throws Exception{
         ModelAndView mv = new ModelAndView("boardList");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        mv.addObject("username",username);
+
         List<Board> list = boardService.selectBoardList(projectidx);
         mv.addObject("list", list);
 
+        //전체 프로그레스바
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+        //to-do done 바
+
+        mv.addObject("backlog_progress",backlog_progress);
+
+        mv.addObject("backlog_done",backlog_done);
+
+
+        mv.addObject("projectidx",projectidx);
         return mv;
     }
 
     @RequestMapping(value="/project/{projectidx}/board/write", method=RequestMethod.GET)
     public ModelAndView openBoardWrite(@PathVariable("projectidx") int projectidx) throws Exception{
         ModelAndView mv = new ModelAndView("boardWrite");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        mv.addObject("username",username);
         mv.addObject(projectidx);
+
+        //전체 프로그레스바
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+
+        mv.addObject("backlog_progress",backlog_progress);
+        mv.addObject("backlog_done",backlog_done);
+
+        mv.addObject("projectidx",projectidx);
         return mv;
     }
 
     @RequestMapping(value="/project/{projectidx}/board/write", method=RequestMethod.POST)
-        public String writeBoard(@PathVariable("projectidx") int projectidx, Board board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
-            boardService.saveBoard(board, multipartHttpServletRequest);
+        public ModelAndView writeBoard(@PathVariable("projectidx") int projectidx, Board board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
 
-        return "redirect:/project/{projectidx}/board";
+        ModelAndView mv = new ModelAndView("redirect:/project/{projectidx}/board");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        mv.addObject("username",username);
+        mv.addObject(projectidx);
+
+        //전체 프로그레스바
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+
+        mv.addObject("backlog_progress",backlog_progress);
+        mv.addObject("backlog_done",backlog_done);
+
+        boardService.saveBoard(board, multipartHttpServletRequest);
+
+        mv.addObject("projectidx",projectidx);
+
+        return mv;
     }
 
     @RequestMapping(value="/project/{projectidx}/board/{boardidx}", method=RequestMethod.GET)
     public ModelAndView openBoardDetail(@PathVariable("projectidx") int projectidx, @PathVariable("boardidx") int boardidx) throws Exception{
         ModelAndView mv = new ModelAndView("boardDetail");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        mv.addObject("username",username);
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+
+        mv.addObject("backlog_progress",backlog_progress);
+        mv.addObject("backlog_done",backlog_done);
+
 
         Board board = boardService.selectBoardDetail(boardidx);
         mv.addObject("board", board);
@@ -60,16 +159,77 @@ public class BoardController {
         return mv;
     }
 
-    @RequestMapping(value="/project/{projectidx}/board/{boardidx}", method=RequestMethod.PUT)
-    public String updateBoard(@PathVariable("projectidx") int projectidx,Board board) throws Exception{
+    @RequestMapping(value="/project/{projectidx}/board/{boardidx}/update", method=RequestMethod.GET)
+    public ModelAndView openBoardDetail_update(@PathVariable("projectidx") int projectidx, @PathVariable("boardidx") int boardidx) throws Exception{
+        ModelAndView mv = new ModelAndView("boardDetail_modify");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        mv.addObject("username",username);
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+
+        mv.addObject("backlog_progress",backlog_progress);
+        mv.addObject("backlog_done",backlog_done);
+
+        Board board = boardService.selectBoardDetail(boardidx);
+        mv.addObject("board", board);
+        mv.addObject("projectidx",projectidx);
+        return mv;
+    }
+
+    @RequestMapping(value="/project/{projectidx}/board/{boardidx}/update", method=RequestMethod.PUT)
+    public ModelAndView updateBoard(@PathVariable("projectidx") int projectidx,Board board) throws Exception{
         boardService.saveBoard(board,null);
-        return "redirect:/project/{projectidx}/board";
+
+        ModelAndView mv =new ModelAndView( "redirect:/project/{projectidx}/board");
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+
+        mv.addObject("backlog_progress",backlog_progress);
+
+        mv.addObject("backlog_done",backlog_done);
+
+        mv.addObject("projectidx",projectidx);
+
+        return mv;
     }
 
     @RequestMapping(value="/project/{projectidx}/board/{boardidx}", method=RequestMethod.DELETE)
-    public String deleteBoard(@PathVariable("boardidx") int boardidx) throws Exception{
+    public ModelAndView deleteBoard(@PathVariable("boardidx") int boardidx, @PathVariable("projectidx") int projectidx) throws Exception{
         boardService.deleteBoard(boardidx);
-        return "redirect:/project/{projectidx}/board";
+        ModelAndView mv =new ModelAndView( "redirect:/project/{projectidx}/board");
+
+        int backlog_all = projectService.progressBacklog(projectidx);
+
+        int backlog_done = projectService.progressBacklog_done(projectidx);
+
+        double temp = ((double)backlog_done/(double)backlog_all)*100;
+
+        int backlog_progress = (int)temp; // 퍼센테이지로 표현하기 위해
+
+
+        mv.addObject("backlog_progress",backlog_progress);
+        mv.addObject("backlog_done",backlog_done);
+
+        mv.addObject("projectidx",projectidx);
+
+        return mv;
     }
 
     @RequestMapping(value="/jpa/board/file", method=RequestMethod.GET)

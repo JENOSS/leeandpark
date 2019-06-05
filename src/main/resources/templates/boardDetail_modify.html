@@ -137,12 +137,12 @@
                                             </tr>
                                             <tr>
                                                 <th scope="row">제목</th>
-                                                <td colspan="8" th:text="${board.title }"></td>
+                                                <td colspan="8"><input type="text" style="width:350px;" id="title" name="title" th:value="${board.title }"/></td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">내용</th>
                                                 <td colspan="8" class="view_text">
-                                                    <pre title="내용" id="contents"  style="width:400px; height:300px;" name="contents" th:text="${board.contents }"></pre>
+                                                    <textarea title="내용" id="contents"  style="width:400px; height:300px;" name="contents" th:text="${board.contents }"></textarea>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -156,9 +156,7 @@
                                         <a th:each="list : ${board.filelist}" th:href="@{/jpa/board/file(idx=${list.idx}, boardidx=${board.boardidx})}" th:text="|${list.originalfilename} (${#numbers.formatInteger(list.filesize/1000, 1, 'DEFAULT')} kb)|"></a>
                                     </div>
 
-                                    <a href="#this" id="list" class="btn">목록으로</a>
-                                    <a th:href="@{/project/{projectidx}/board/{boardidx}/update(projectidx=${projectidx}, boardidx=${boardidx})}" class="btn">수정하기</a>
-                                    <a href="#this" id="delete" class="btn">삭제하기</a>
+                                    <a href="#this" id="edit" class="btn">저장하기</a>
                                 </div>
 
                                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -175,7 +173,7 @@
                                             $("#method").val("put");
 
                                             var frm = $("#frm")[0];
-                                            frm.action = "/project/"+projectidx+"/board/"+boardidx;
+                                            frm.action = "/project/"+projectidx+"/board/"+boardidx+"/update/";
                                             frm.submit();
                                         });
 

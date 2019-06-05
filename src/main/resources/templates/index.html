@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" http-equiv="Content-Type"content="text/html, width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Master Plan</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="/vendors/mdi/css/materialdesignicons.min.css">
@@ -14,20 +15,29 @@
     <link rel="stylesheet" href="/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
     <!-- inject:css -->
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/animate.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="/images/clip.jpg"/>
+
 </head>
 
 <body>
+<style type="text/css">
+    #fa {
+        animation-duration: 1s;
+        animation-name: bounce
+    }
+</style>
 <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="navbar-brand-wrapper d-flex justify-content-center">
             <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-                <a class="navbar-brand brand-logo" href="/"><img src="/images/mpp.png" alt="logo"/></a>
-                <a class="navbar-brand brand-logo-mini" href="/"><img src="/images/logo-mini.svg"
+                <a class="navbar-brand brand-logo" href="/project/" ><img src="/images/mpp.png" alt="logo"/></a>
+                <a class="navbar-brand brand-logo-mini" href="/project" ><img src="/images/logo-mini.svg"
                                                                       alt="logo"/></a>
-                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+
+                <button class="navbar-toggler align-self-center" type="button" data-toggle="minimize">
                     <span class="mdi mdi-sort-variant"></span>
                 </button>
             </div>
@@ -38,7 +48,8 @@
             <ul class="navbar-nav mr-lg-4 w-100">
                 <li class="nav-item nav-search d-none d-lg-block w-75">
                     <div class="progress">
-                        <div class="progress-bar bg-primary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-primary" role="progressbar" style="width : " th:styleappend="${backlog_progress}+'%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+
                     </div>
                 </li>
             </ul>
@@ -48,7 +59,7 @@
                 <li class="nav-item nav-profile dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                         <img src="/images/faces/face_non.png" alt="profile"/>
-                        <span class="nav-profile-name">Louis Barnett</span>
+                        <span class="nav-profile-name" th:text="${username}"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                         <a class="dropdown-item">
@@ -74,66 +85,52 @@
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
                 <li class="nav-item">
+                    <a class="nav-link"href="/project/"  th:attrappend="href=${projectidx}">
+                        <i class="mdi mdi-home menu-icon"></i>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/sprint/"  th:attrappend="href=${projectidx}">
                         <i class="mdi mdi-emoticon-tongue menu-icon"></i>
                         <span class="menu-title">스프린트</span>
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="storage">
-                        <i class="mdi mdi-cloud menu-icon"></i>
-                        <span class="menu-title">저장소</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="notice">
+                    <a class="nav-link" th:href="@{/project/{projectidx}/board(projectidx=${projectidx})}">
                         <i class="mdi mdi-view-headline menu-icon"></i>
                         <span class="menu-title">게시판</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="teamchat">
-                        <i class="mdi mdi-wechat menu-icon"></i>
-                        <span class="menu-title">팀 채팅</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="schedule">
                         <i class="mdi mdi-calendar menu-icon"></i>
-                        <span class="menu-title">일정</span>
+                        <span class="menu-title">프로젝트 관리</span>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
-                       aria-controls="ui-basic">
-                        <i class="mdi mdi-circle-outline menu-icon"></i>
-                        <span class="menu-title">UI Elements</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="ui-basic">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"><a class="nav-link" href="/pages/ui-features/buttons.html">Buttons</a>
-                            </li>
-                            <li class="nav-item"><a class="nav-link"
-                                                    href="/pages/ui-features/typography.html">Typography</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                        <i class="mdi mdi-account menu-icon"></i>
-                        <span class="menu-title">User Pages</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="auth">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"><a class="nav-link" href="login"> Login </a></li>
-                            <li class="nav-item"><a class="nav-link" href="register"> Register </a></li>
-                            <li class="nav-item"><a class="nav-link" href="projectHome"> project home </a></li>
-                        </ul>
-                    </div>
                 </li>
             </ul>
+            <!--
+            <div type="hidden"><h>test progress: <input type="text" th:value="${backlog_progress}"> </h></div>
+            <div><h>test doing: <input type="hidden" th:value="${backlog_doing}"> </h></div>
+            <div><h>test done: <input type="hidden" th:value="${backlog_done}"> </h></div>
+            <div><h>test doing: <input type="hidden" th:value="${todo}"> </h></div>
+            <div><h>test done: <input type="hidden" th:value="${done}"> </h></div>
+            -->
+            <input type="hidden" id="todo" th:value="${todo}">
+            <input type="hidden" id="done" th:value="${done}">
+            <input type="hidden" id="doing" th:value="${doing}">
+            <input type="hidden" id="backlogdone" th:value="${backlog_done}">
+            <input type="hidden" id="backlogall" th:value="${backlog_all}">
+            <input type="hidden" id="backlogprogress" th:value="${backlog_progress}">
+            <input type="hidden" id="startday" th:value="${startdate}">
+            <input type="hidden" id="title" th:value="${title}">
+            <input type="hidden" id="leader" th:value="${leader}">
+            <input type="hidden" th:value="${leader_done}">
+            <input type="hidden"  th:value="${leader_all}">
+            <input type="hidden"  th:value="${leader_progress}">
+
+
         </nav>
         <!-- partial -->
         <div class="main-panel">
@@ -147,154 +144,91 @@
                                         <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="sales-tab" data-toggle="tab" href="#sales" role="tab" aria-controls="sales" aria-selected="false">Sales</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="purchases-tab" data-toggle="tab" href="#purchases" role="tab" aria-controls="purchases" aria-selected="false">Purchases</a>
+                                        <a class="nav-link" id="sales-tab" data-toggle="tab" href="#sales" role="tab" aria-controls="sales" aria-selected="false">Members</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content py-0 px-0">
                                     <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
                                         <div class="d-flex flex-wrap justify-content-xl-between">
+                                            <div id="fa" class="d-none d-xl-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
+                                                <div class="d-flex flex-column justify-content-around">
+                                                    <h2 id="protitle"></h2>
+                                                </div>
+                                            </div>
                                             <div class="d-none d-xl-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
                                                 <i class="mdi mdi-calendar-heart icon-lg mr-3 text-primary"></i>
                                                 <div class="d-flex flex-column justify-content-around">
                                                     <small class="mb-1 text-muted">Start date</small>
                                                     <div class="dropdown">
                                                         <a class="btn btn-secondary dropdown-toggle p-0 bg-transparent border-0 text-dark shadow-none font-weight-medium" href="#" role="button" id="dropdownMenuLinkA" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <h5 class="mb-0 d-inline-block">26 Jul 2018</h5>
+                                                            <h5 class="mb-0 d-inline-block" id="startdate"></h5>
+
                                                         </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkA">
-                                                            <a class="dropdown-item" href="#">12 Aug 2018</a>
-                                                            <a class="dropdown-item" href="#">22 Sep 2018</a>
-                                                            <a class="dropdown-item" href="#">21 Oct 2018</a>
-                                                        </div>
+
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-currency-usd mr-3 icon-lg text-danger"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Revenue</small>
-                                                    <h5 class="mr-2 mb-0">$577545</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-eye mr-3 icon-lg text-success"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Total views</small>
-                                                    <h5 class="mr-2 mb-0">9833550</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-download mr-3 icon-lg text-warning"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Downloads</small>
-                                                    <h5 class="mr-2 mb-0">2233783</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex py-3 border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-flag mr-3 icon-lg text-danger"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Flagged</small>
-                                                    <h5 class="mr-2 mb-0">3497843</h5>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="sales" role="tabpanel" aria-labelledby="sales-tab">
                                         <div class="d-flex flex-wrap justify-content-xl-between">
-                                            <div class="d-none d-xl-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-calendar-heart icon-lg mr-3 text-primary"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Start date</small>
-                                                    <div class="dropdown">
-                                                        <a class="btn btn-secondary dropdown-toggle p-0 bg-transparent border-0 text-dark shadow-none font-weight-medium" href="#" role="button" id="dropdownMenuLinkA" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <h5 class="mb-0 d-inline-block">26 Jul 2018</h5>
-                                                        </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkA">
-                                                            <a class="dropdown-item" href="#">12 Aug 2018</a>
-                                                            <a class="dropdown-item" href="#">22 Sep 2018</a>
-                                                            <a class="dropdown-item" href="#">21 Oct 2018</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-download mr-3 icon-lg text-warning"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Downloads</small>
-                                                    <h5 class="mr-2 mb-0">2233783</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-eye mr-3 icon-lg text-success"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Total views</small>
-                                                    <h5 class="mr-2 mb-0">9833550</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-currency-usd mr-3 icon-lg text-danger"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Revenue</small>
-                                                    <h5 class="mr-2 mb-0">$577545</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex py-3 border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-flag mr-3 icon-lg text-danger"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Flagged</small>
-                                                    <h5 class="mr-2 mb-0">3497843</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="purchases" role="tabpanel" aria-labelledby="purchases-tab">
-                                        <div class="d-flex flex-wrap justify-content-xl-between">
-                                            <div class="d-none d-xl-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-calendar-heart icon-lg mr-3 text-primary"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Start date</small>
-                                                    <div class="dropdown">
-                                                        <a class="btn btn-secondary dropdown-toggle p-0 bg-transparent border-0 text-dark shadow-none font-weight-medium" href="#" role="button" id="dropdownMenuLinkA" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <h5 class="mb-0 d-inline-block">26 Jul 2018</h5>
-                                                        </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkA">
-                                                            <a class="dropdown-item" href="#">12 Aug 2018</a>
-                                                            <a class="dropdown-item" href="#">22 Sep 2018</a>
-                                                            <a class="dropdown-item" href="#">21 Oct 2018</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-currency-usd mr-3 icon-lg text-danger"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Revenue</small>
-                                                    <h5 class="mr-2 mb-0">$577545</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-eye mr-3 icon-lg text-success"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Total views</small>
-                                                    <h5 class="mr-2 mb-0">9833550</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-download mr-3 icon-lg text-warning"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Downloads</small>
-                                                    <h5 class="mr-2 mb-0">2233783</h5>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex py-3 border-md-right flex-grow-1 align-items-center justify-content-center p-3 item">
-                                                <i class="mdi mdi-flag mr-3 icon-lg text-danger"></i>
-                                                <div class="d-flex flex-column justify-content-around">
-                                                    <small class="mb-1 text-muted">Flagged</small>
-                                                    <h5 class="mr-2 mb-0">3497843</h5>
-                                                </div>
+                                            <div class="table-responsive" style="text-align:center;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+
+                                                        </th>
+                                                        <th>
+                                                            User Name
+                                                        </th>
+                                                        <th>
+                                                            Sprint Progress
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="py-1">
+                                                            <i class="mdi mdi-star-circle icon-lg mr-3 text-primary"></i>
+                                                        </td>
+                                                        <td id="member_leader">
+                                                            leader
+                                                        </td>
+                                                        <td>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-success" role="progressbar"style="width : " th:styleappend="${leader_progress}+'%'"  aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="py-1">
+                                                            <i class="mdi mdi-account-circle mr-3 icon-lg text-primary"></i>
+                                                        </td>
+                                                        <td>
+                                                            Messsy Adam
+                                                        </td>
+                                                        <td>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="py-1">
+                                                            <i class="mdi mdi-account-circle mr-3 icon-lg text-primary"></i>
+                                                        </td>
+                                                        <td>
+                                                            HONG
+                                                        </td>
+                                                        <td>
+                                                            <div class="progress">
+                                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -304,37 +238,31 @@
                     </div>
                 </div>
 
-
                 <div class="row">
-                    <div class="col-md-6 stretch-card">
+                    <div class="col-md-4 stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Doing / Done</h4>
-
+                                <h4 class="card-title">Doing</h4>
                                 <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Doing</th>
-                                            <th>Done</th>
+                                            <th>Task</th>
+                                            <th>D-day</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr>
-                                            <td>TD/IDF RESEARCH</td>
-                                            <td><label class="badge badge-danger">SCRUMBLE EGG</label></td>
+                                            <td><label class="badge badge-warning">Scrum board</td>
+                                            <td>19-06-11
+
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td>Messsy</td>
-                                            <td><label class="badge badge-warning">In progress</label></td>
-                                        </tr>
-                                        <tr>
-                                            <td>John</td>
-                                            <td><label class="badge badge-info">Fixed</label></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Peter</td>
-                                            <td><label class="badge badge-success">Completed</label></td>
+                                            <td><label class="badge badge-warning">Final report</td>
+                                            <td>19-06-11
+
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -342,12 +270,40 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 grid-margin stretch-card">
+
+                    <div class="col-md-4 stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Done</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Task</th>
+                                            <th>Finished day</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td><label class="badge badge-success">Scrum board</td>
+                                            <td>19-06-11</td>
+                                        </tr>
+                                        <tr>
+                                            <td><label class="badge badge-success">Final report</td>
+                                            <td>19-06-11</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <p class="card-title">Sprint Time</p>
                                 <div class="progress">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-success" role="progressbar" style="width : " th:styleappend="${sprint_progress}+'%'" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <br><br><br>
                                 <p class="card-title">Sprint Progress</p>
@@ -373,10 +329,48 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-<!-- container-scroller -->
 
+<!-- container-scroller -->
 <!-- plugins:js -->
 <script src="/vendors/base/vendor.bundle.base.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        var startdate= $("#startday").val();
+        $('#startdate').text(startdate);
+    });
+
+    $(document).ready(function(){
+        var title= $("#title").val();
+        $('#protitle').text(title);
+    });
+
+    $(document).ready(function(){
+        var leader= $("#leader").val();
+        $('#member_leader').text(leader);
+    });
+
+</script>
+<script>
+    $(function() {
+        $( "#datepicker1, #datepicker2" ).datepicker({
+            dateFormat: 'yy.mm.dd',
+            prevText: '이전 달',
+            nextText: '다음 달',
+            monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+            monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+            dayNames: ['일','월','화','수','목','금','토'],
+            dayNamesShort: ['일','월','화','수','목','금','토'],
+            dayNamesMin: ['일','월','화','수','목','금','토'],
+            showMonthAfterYear: true,
+            changeMonth: true,
+            changeYear: true,
+            yearSuffix: '년'
+        });
+    });
+</script>
 <!-- endinject -->
 <!-- Plugin js for this page-->
 <script src="/vendors/chart.js/Chart.min.js"></script>
@@ -394,8 +388,8 @@
 <script src="/js/data-table.js"></script>
 <script src="/js/jquery.dataTables.js"></script>
 <script src="/js/dataTables.bootstrap4.js"></script>
+
 <!-- End custom js for this page-->
 </body>
 
 </html>
-

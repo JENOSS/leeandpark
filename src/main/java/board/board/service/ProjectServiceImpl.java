@@ -2,8 +2,10 @@ package board.board.service;
 import board.board.model.Project;
 import board.board.model.ProjectMember;
 import board.board.model.Sprint;
+import board.board.model.SprintBacklog;
 import board.board.repository.ProjectMemberRepository;
 import board.board.repository.ProjectRepository;
+import board.board.repository.SprintBacklogRepository;
 import board.board.repository.SprintRepository;
 import board.common.CurrentDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class ProjectServiceImpl implements   ProjectService{
     ProjectRepository projectRepository;
     @Autowired
     SprintRepository sprintRepository;
+    @Autowired
+    SprintBacklogRepository sprintBacklogRepository;
 
 
    public List<ProjectMember> selectProjectMemberList() {
@@ -46,12 +50,20 @@ public class ProjectServiceImpl implements   ProjectService{
     public  void saveProject(Project project) {
 
         ProjectMember pm = new ProjectMember();
+
+        CurrentDate currentDate = new CurrentDate();
+
         int projectidx;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         project.setCreatorid(username);
+        project.setYear(currentDate.year());
+        project.setMonth(currentDate.month());
+        project.setDate(currentDate.date());
         projectRepository.save(project);
+
         projectidx = projectRepository.findMaxProjectidx();
+
         pm.setId(username);
         pm.setProjectidx(projectidx);
         projectMemberRepository.save(pm);
@@ -61,7 +73,7 @@ public class ProjectServiceImpl implements   ProjectService{
         sp.setLevel(0);
         sp.setCycle(0);
 
-        CurrentDate currentDate = new CurrentDate();
+
 
         sp.setYear(currentDate.year());
         sp.setMonth(currentDate.month());
@@ -100,6 +112,76 @@ public class ProjectServiceImpl implements   ProjectService{
        pm.setId(username);
        pm.setProjectidx(projectidx);
        projectMemberRepository.save(pm);
+    }
+
+    public int progressBacklog(int projectidx) {
+
+        Long sprintid;
+
+        Sprint sp = sprintRepository.findByProjectidx(projectidx);
+        sprintid = sp.getSprintid();
+
+        int all_backlog=0;
+
+        List<SprintBacklog> a = sprintBacklogRepository.findBySprintid(sprintid);
+
+        Iterator<SprintBacklog> spb = a.iterator();
+
+        //has.next사용하면 안됨
+        while (spb.hasNext()) {
+            if(spb.next().getSprintid().equals(sprintid))
+                all_backlog++;
+        }
+
+
+
+        return all_backlog;
+    }
+
+    public int progressBacklog_doing(int projectidx) {
+
+        Long sprintid;
+
+        Sprint sp = sprintRepository.findByProjectidx(projectidx);
+        sprintid = sp.getSprintid();
+
+        int doing = 0;
+
+        String equal="Y";
+
+        List<SprintBacklog> a = sprintBacklogRepository.findBySprintid(sprintid);
+
+        Iterator<SprintBacklog> spb = a.iterator();
+        while (spb.hasNext()) {
+            if (spb.next().getIsdoing().equals(equal)) {
+                doing++;
+            }
+
+        }
+
+        return doing ;
+    }
+
+    public int progressBacklog_done(int projectidx) {
+
+        Long sprintid;
+
+        Sprint sp = sprintRepository.findByProjectidx(projectidx);
+        sprintid = sp.getSprintid();
+
+        int done = 0;
+
+        String equal = "Y";
+        List<SprintBacklog> a = sprintBacklogRepository.findBySprintid(sprintid);
+
+        Iterator<SprintBacklog> spb = a.iterator();
+        while (spb.hasNext()) {
+            if (spb.next().getIsdone().equals(equal)) {
+                done++;
+            }
+        }
+
+        return done;
     }
 
 

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -31,7 +33,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void saveBoard(Board board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
-        board.setCreatorid("admin");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        board.setCreatorid(username);
         List<BoardFile>list = fileUtils.parseFileInfo(multipartHttpServletRequest);
 
         if(CollectionUtils.isEmpty(list) == false) {
