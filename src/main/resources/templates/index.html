@@ -188,45 +188,18 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
+                                                    <tr th:each="pmember : ${memberprogress} ">
                                                         <td class="py-1">
-                                                            <i class="mdi mdi-star-circle icon-lg mr-3 text-primary"></i>
+                                                            <i class="mdi mdi-account-circle icon-lg mr-3 text-primary"></i>
                                                         </td>
-                                                        <td id="member_leader">
-                                                            leader
-                                                        </td>
+                                                        <td th:text="${pmember.key}">keyvalue</td>
                                                         <td>
                                                             <div class="progress">
-                                                                <div class="progress-bar bg-success" role="progressbar"style="width : " th:styleappend="${leader_progress}+'%'"  aria-valuemin="0" aria-valuemax="100"></div>
+                                                                <div class="progress-bar bg-success" role="progressbar"style="width : " th:styleappend="${pmember.value.intValue()}+'%'"  aria-valuemin="0" aria-valuemax="100"></div>
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="py-1">
-                                                            <i class="mdi mdi-account-circle mr-3 icon-lg text-primary"></i>
-                                                        </td>
-                                                        <td>
-                                                            Messsy Adam
-                                                        </td>
-                                                        <td>
-                                                            <div class="progress">
-                                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="py-1">
-                                                            <i class="mdi mdi-account-circle mr-3 icon-lg text-primary"></i>
-                                                        </td>
-                                                        <td>
-                                                            HONG
-                                                        </td>
-                                                        <td>
-                                                            <div class="progress">
-                                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -248,21 +221,11 @@
                                         <thead>
                                         <tr>
                                             <th>Task</th>
-                                            <th>D-day</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td><label class="badge badge-warning">Scrum board</td>
-                                            <td>19-06-11
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label class="badge badge-warning">Final report</td>
-                                            <td>19-06-11
-
-                                            </td>
+                                        <tr th:each="list : ${doingList}">
+                                            <td><label class="badge badge-warning" th:text="${list.contents}"></label></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -280,17 +243,11 @@
                                         <thead>
                                         <tr>
                                             <th>Task</th>
-                                            <th>Finished day</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td><label class="badge badge-success">Scrum board</td>
-                                            <td>19-06-11</td>
-                                        </tr>
-                                        <tr>
-                                            <td><label class="badge badge-success">Final report</td>
-                                            <td>19-06-11</td>
+                                        <tr th:each="list : ${doneList}">
+                                            <td><label class="badge badge-warning" th:text="${list.contents}"></label></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -348,8 +305,8 @@
     });
 
     $(document).ready(function(){
-        var leader= $("#leader").val();
-        $('#member_leader').text(leader);
+       // var leader= $("#leader").val();
+       // $('#member_leader').text(leader);
     });
 
 </script>

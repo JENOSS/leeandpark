@@ -184,5 +184,9 @@ public class ProjectServiceImpl implements   ProjectService{
         return done;
     }
 
+    public List<String> selectProjectMemberListbyProjectidx(int projectidx) {
+       return projectMemberRepository.findidByProjectidx(projectidx);
+    }
+
 
 }

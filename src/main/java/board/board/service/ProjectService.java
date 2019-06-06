@@ -15,6 +15,8 @@ public interface ProjectService {
     int isMember(int projectidx,String username);
     void addMember(int projectidx,String username);
 
+    List<String> selectProjectMemberListbyProjectidx(int projectidx);
+
     int progressBacklog(int projectidx);
     int progressBacklog_doing(int projectidx);
     int progressBacklog_done(int projectidx);
